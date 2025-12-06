@@ -203,78 +203,10 @@ h2 {
     margin: 5px 0 0;
 }
 
-/* ألوان خلفية الكروت وأيقونات Overlay */
-.stat-card::before {
-    content: attr(data-icon);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 8rem;
-    opacity: 0.05; /* تعتيم منخفض جداً */
-    pointer-events: none;
-    font-family: 'Font Awesome 5 Free'; /* افتراض استخدام Font Awesome */
-    font-weight: 900;
-}
 
-.stat-card[data-code="ASTM"] {
-    background-color: var(--card-bg-1);
-}
-.stat-card[data-code="ASTM"]::before {
-    content: "\f7c9"; /* أيقونة عينة تربة/أسفلت (مثل مخروط) */
-    color: var(--primary);
-}
 
-.stat-card[data-code="ACI"] {
-    background-color: var(--card-bg-2);
-}
-.stat-card[data-code="ACI"]::before {
-    content: "\f5b8"; /* أيقونة عمود خرساني (مثل مكعب) */
-    color: var(--secondary);
-}
 
-.stat-card[data-code="BS"] {
-    background-color: var(--card-bg-3);
-}
-.stat-card[data-code="BS"]::before {
-    content: "\f024"; /* أيقونة علم (مثل علم بريطانيا) */
-    color: #eab308; /* Amber-500 */
-}
 
-.stat-card[data-code="OTHER"] {
-    background-color: var(--card-bg-4);
-}
-.stat-card[data-code="OTHER"]::before {
-    content: "\f07b"; /* أيقونة مجلد */
-    color: var(--text-dark);
-}
-
-/* ============================================
- * قسم المعايير والملفات
- * ============================================ */
-.standards-grid, .files-list {
-    display: grid;
-    gap: 15px;
-}
-
-.standards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.standard-item, .file-item {
-    padding: 15px;
-    border-radius: 8px;
-    background-color: var(--bg-soft); /* بديل الأبيض */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-    border-right: 5px solid var(--primary);
-}
-
-.standard-item:hover, .file-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
 
 .standard-item h4, .file-item h4 {
     margin: 0 0 5px;
