@@ -1,0 +1,28 @@
+{
+  "name": "engineering-specs-platform",
+  "version": "1.0.0",
+  "description": "منصة محمد القصبي لإدارة ملفات المواصفات الهندسية والترجمات",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "engineering",
+    "specifications",
+    "standards",
+    "ASTM",
+    "ACI",
+    "BS"
+  ],
+  "author": "محمد القصبي",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  }
+}

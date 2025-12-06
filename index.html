@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة محمد القصبي - إدارة المواصفات الهندسية</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ============================================
+         الـ Container الرئيسي
+         ============================================ -->
+    <div class="main-container">
+
+        <!-- ============================================
+             هيدر المنصة (Banner)
+             ============================================ -->
+        <header class="platform-header">
+            <div class="header-content">
+                <!-- الجزء الأيمن: العنوان والأيقونة -->
+                <div class="header-right">
+                    <div class="header-title-section">
+                        <h1 class="platform-title">منصة محمد القصبي</h1>
+                        <p class="platform-subtitle">إدارة المواصفات الهندسية والترجمات</p>
+                    </div>
+                    <div class="header-icon">
+                        🏗️
+                    </div>
+                </div>
+
+                <!-- الجزء الأيسر: أيقونات أجهزة المختبر -->
+                <div class="header-left">
+                    <div class="lab-icons-group">
+                        <div class="lab-icon" title="جهاز كسر الخرسانة">
+                            💪
+                        </div>
+                        <div class="lab-icon" title="جهاز المنخل الهزاز">
+                            🔀
+                        </div>
+                        <div class="lab-icon" title="جهاز مارشال الأسفلت">
+                            ⚙️
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- زر/حالة تسجيل الدخول للأدمن -->
+            <div class="admin-section">
+                <button id="adminLoginBtn" class="admin-btn">تسجيل الدخول - أدمن</button>
+                <div id="adminStatus" class="admin-status" style="display: none;">
+                    <button id="uploadFileBtn" class="upload-btn">📤 رفع ملف جديد</button>
+                    <span class="admin-badge">أدمن</span>
+                    <button id="adminLogoutBtn" class="logout-btn">تسجيل الخروج</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================
+             قسم الإحصائيات
+             ============================================ -->
+        <section class="statistics-section">
+            <h2 class="section-title">📊 الإحصائيات</h2>
+            <div class="statistics-grid" id="statisticsGrid">
+                <!-- سيتم ملء هذا الجزء بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ============================================
+             قسم المعايير المتاحة
+             ============================================ -->
+        <section class="standards-section">
+            <h2 class="section-title">⚙️ المعايير المتاحة</h2>
+            <div class="standards-grid" id="standardsGrid">
+                <!-- سيتم ملء هذا الجزء بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ============================================
+             قسم البحث
+             ============================================ -->
+        <section class="search-section">
+            <h2 class="section-title">🔍 البحث عن الملفات</h2>
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="ابحث عن ملف أو معيار..."
+                    autocomplete="off"
+                >
+                <div id="searchResults" class="search-results" style="display: none;">
+                    <!-- سيتم ملء نتائج البحث هنا -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             قسم الملفات المتاحة
+             ============================================ -->
+        <section class="files-section">
+            <h2 class="section-title">📁 الملفات المتاحة</h2>
+            <div class="files-grid" id="filesGrid">
+                <!-- سيتم ملء هذا الجزء بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ============================================
+             قسم تقييم المنصة
+             ============================================ -->
+        <section class="rating-section">
+            <h2 class="section-title">⭐ قيّم المنصة</h2>
+            <div class="rating-container">
+                <div class="rating-summary" id="ratingSummary">
+                    <!-- سيتم ملء ملخص التقييمات هنا -->
+                </div>
+
+                <form id="ratingForm" class="rating-form">
+                    <div class="stars-container">
+                        <label class="star-label">
+                            <input type="radio" name="rating" value="5" required>
+                            <span class="star">⭐</span>
+                        </label>
+                        <label class="star-label">
+                            <input type="radio" name="rating" value="4" required>
+                            <span class="star">⭐</span>
+                        </label>
+                        <label class="star-label">
+                            <input type="radio" name="rating" value="3" required>
+                            <span class="star">⭐</span>
+                        </label>
+                        <label class="star-label">
+                            <input type="radio" name="rating" value="2" required>
+                            <span class="star">⭐</span>
+                        </label>
+                        <label class="star-label">
+                            <input type="radio" name="rating" value="1" required>
+                            <span class="star">⭐</span>
+                        </label>
+                    </div>
+
+                    <textarea 
+                        id="ratingComment" 
+                        class="rating-comment" 
+                        placeholder="أضف تعليقك (اختياري)..."
+                        rows="4"
+                    ></textarea>
+
+                    <button type="submit" class="submit-rating-btn">إرسال التقييم</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ============================================
+             الفوتر
+             ============================================ -->
+        <footer class="platform-footer">
+            <p>&copy; 2025 منصة محمد القصبي - جميع الحقوق محفوظة</p>
+            <p>منصة متخصصة في إدارة المواصفات الهندسية والترجمات</p>
+        </footer>
+    </div>
+
+    <!-- ============================================
+         Modal لتسجيل دخول الأدمن
+         ============================================ -->
+    <div id="adminLoginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>تسجيل دخول الأدمن</h2>
+            <form id="adminLoginForm">
+                <input 
+                    type="password" 
+                    id="adminPassword" 
+                    class="modal-input" 
+                    placeholder="أدخل كلمة السر"
+                    required
+                >
+                <button type="submit" class="modal-btn">دخول</button>
+            </form>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Modal لرفع ملف جديد (أدمن)
+         ============================================ -->
+    <div id="uploadModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>رفع ملف جديد</h2>
+            <form id="uploadForm">
+                <select id="standardSelect" class="modal-input" required>
+                    <option value="">اختر المعيار</option>
+                </select>
+                <input 
+                    type="text" 
+                    id="fileTitle" 
+                    class="modal-input" 
+                    placeholder="عنوان الملف"
+                    required
+                >
+                <textarea 
+                    id="fileDescription" 
+                    class="modal-input" 
+                    placeholder="وصف الملف (اختياري)"
+                    rows="3"
+                ></textarea>
+                <input 
+                    type="file" 
+                    id="fileInput" 
+                    class="modal-input" 
+                    required
+                >
+                <button type="submit" class="modal-btn">رفع الملف</button>
+            </form>
+            <div id="uploadError" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Modal لعرض ملفات المعيار
+         ============================================ -->
+    <div id="standardFilesModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <span class="close-modal">&times;</span>
+            <h2 id="standardFilesTitle">ملفات المعيار</h2>
+            <div id="standardFilesList" class="files-list">
+                <!-- سيتم ملء الملفات هنا -->
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
