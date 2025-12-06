@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة محمد القصبي</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- ملف الأنماط -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- ============================================
+        | الهيدر والشريط العلوي (Banner )
+        ============================================ -->
+        <div class="header-banner">
+            <h1>
+                <span class="fa-icon icon-helmet"></span>
+                منصة محمد القصبي
+            </h1>
+            <div class="lab-icons">
+                <span class="fa-icon icon-concrete-breaker icon" title="جهاز كسر خرسانة"></span>
+                <span class="fa-icon icon-sieve icon" title="جهاز منخل هزاز"></span>
+                <span class="fa-icon icon-asphalt icon" title="جهاز مارشال أسفلت"></span>
+            </div>
+        </div>
+
+        <!-- منطقة الأدمن -->
+        <div class="admin-area">
+            <button id="admin-login-btn" class="icon-admin">تسجيل الدخول - أدمن</button>
+            <div id="admin-status"></div>
+            <button id="upload-file-btn" class="icon-upload" style="display: none;">
+                <span class="fa-icon icon-upload"></span> رفع ملف جديد
+            </button>
+        </div>
+
+        <!-- ============================================
+        | قسم الإحصائيات
+        ============================================ -->
+        <section id="statistics-section">
+            <h2><span class="fa-icon icon-stats"></span> الإحصائيات</h2>
+            <div id="stats-grid" class="stats-grid">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ============================================
+        | قسم المعايير
+        ============================================ -->
+        <section id="standards-section">
+            <h2><span class="fa-icon icon-code"></span> المعايير والكودات الهندسية</h2>
+            <div id="standards-grid" class="standards-grid">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ============================================
+        | قسم البحث
+        ============================================ -->
+        <section id="search-section">
+            <h2><span class="fa-icon icon-search"></span> البحث عن ملف</h2>
+            <form id="search-form">
+                <input type="text" id="search-input" placeholder="ابحث بعنوان الملف أو الوصف..." required>
+                <button id="search-button" type="submit">بحث</button>
+            </form>
+        </section>
+
+        <!-- ============================================
+        | قسم الملفات
+        ============================================ -->
+        <section id="files-section">
+            <h2 id="file-list-title">الملفات المتاحة</h2>
+            <div id="files-list" class="files-list">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ============================================
+        | قسم التقييم
+        ============================================ -->
+        <section id="rating-section">
+            <h2><span class="fa-icon icon-rating"></span> تقييم المنصة</h2>
+            <div id="rating-summary">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+            <form id="rating-form">
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required><label for="star5" title="ممتاز">★</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="جيد جداً">★</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="جيد">★</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="مقبول">★</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="سيئ">★</label>
+                </div>
+                <textarea id="rating-comment" placeholder="اكتب تعليقك هنا (اختياري)..."></textarea>
+                <button id="submit-rating" type="submit">إرسال التقييم</button>
+            </form>
+        </section>
+
+    </div> <!-- نهاية container -->
+
+    <!-- ============================================
+    | مودال تسجيل الدخول (Login Modal)
+    ============================================ -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>تسجيل دخول الأدمن</h3>
+            <form id="login-form">
+                <input type="password" id="admin-password" placeholder="كلمة سر الأدمن" required>
+                <button type="submit">دخول</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================
+    | مودال رفع الملفات (Upload Modal)
+    ============================================ -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>رفع ملف مواصفات جديد</h3>
+            <form id="upload-form" enctype="multipart/form-data">
+                <select name="standardId" required>
+                    <option value="">اختر المعيار</option>
+                    <option value="1">ASTM</option>
+                    <option value="2">ACI</option>
+                    <option value="3">BS</option>
+                    <option value="4">أكواد أخرى</option>
+                </select>
+                <input type="text" name="title" placeholder="عنوان الملف" required>
+                <input type="text" name="description" placeholder="وصف موجز للملف" required>
+                <input type="file" name="file" required>
+                <button type="submit">رفع الملف</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ملف JavaScript -->
+    <script src="/main.js" defer></script>
+</body>
+</html>
 
