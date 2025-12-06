@@ -87,13 +87,26 @@ async function initializeDatabase() {
       )
     `);
 
-    // إدخال البيانات الأولية للمعايير (تمت إضافتها لحل مشكلة الإحصائيات)
+    // إدخال البيانات الأولية للمعايير (تم تقسيمها لحل مشكلة صياغة SQL)
     await pool.query(`
         INSERT INTO standards (id, code, name, description) VALUES
-        (1, 'ASTM', 'معايير ASTM الأمريكية', 'معايير الجمعية الأمريكية للاختبار والمواد') ON CONFLICT (id) DO NOTHING,
-        (2, 'ACI', 'معايير ACI الخرسانية', 'معايير معهد الخرسانة الأمريكي') ON CONFLICT (id) DO NOTHING,
-        (3, 'BS', 'معايير BS البريطانية', 'معايير المواصفات البريطانية') ON CONFLICT (id) DO NOTHING,
-        (4, 'OTHER', 'أكواد أخرى', 'معايير دولية وإقليمية أخرى') ON CONFLICT (id) DO NOTHING;
+        (1, 'ASTM', 'معايير ASTM الأمريكية', 'معايير الجمعية الأمريكية للاختبار والمواد')
+        ON CONFLICT (id) DO NOTHING;
+    `);
+    await pool.query(`
+        INSERT INTO standards (id, code, name, description) VALUES
+        (2, 'ACI', 'معايير ACI الخرسانية', 'معايير معهد الخرسانة الأمريكي')
+        ON CONFLICT (id) DO NOTHING;
+    `);
+    await pool.query(`
+        INSERT INTO standards (id, code, name, description) VALUES
+        (3, 'BS', 'معايير BS البريطانية', 'معايير المواصفات البريطانية')
+        ON CONFLICT (id) DO NOTHING;
+    `);
+    await pool.query(`
+        INSERT INTO standards (id, code, name, description) VALUES
+        (4, 'OTHER', 'أكواد أخرى', 'معايير دولية وإقليمية أخرى')
+        ON CONFLICT (id) DO NOTHING;
     `);
 
     // جدول الملفات (Files)
@@ -134,7 +147,7 @@ initializeDatabase();
 // API Endpoints - Middleware
 // ============================================
 
-// Middleware للتحقق من صلاحيات الأدمن (تمت إضافتها لحل مشكلة الرفع)
+// Middleware للتحقق من صلاحيات الأدمن
 function requireAdmin(req, res, next) {
     const adminToken = req.header('X-Admin-Token');
     // كلمة السر هي elkasaby2025 (مخزنة في .env)
@@ -149,7 +162,7 @@ function requireAdmin(req, res, next) {
 // API Endpoints - تسجيل الدخول والملفات
 // ============================================
 
-// 1. نقطة نهاية تسجيل الدخول (تمت إضافتها لحل مشكلة الرفع)
+// 1. نقطة نهاية تسجيل الدخول
 app.post('/api/admin/login', (req, res) => {
     const { password } = req.body;
     if (password === process.env.ADMIN_PASSWORD) {
@@ -233,7 +246,7 @@ app.get('/api/files/:id/download', async (req, res) => {
 });
 
 // ============================================
-// API Endpoints - الإحصائيات والمعايير والتقييمات (يجب إضافتها لاحقاً)
+// API Endpoints - الإحصائيات والمعايير والتقييمات
 // ============================================
 
 // 4. جلب الإحصائيات
