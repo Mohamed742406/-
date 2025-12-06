@@ -245,11 +245,69 @@ app.get('/api/files/:id/download', async (req, res) => {
   }
 });
 
+// 4. تعديل بيانات ملف (محمي بكلمة سر الأدمن)
+app.put('/api/files/:id', requireAdmin, async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        const { standardId, title, description } = req.body;
+
+        if (!standardId || !title) {
+            return res.status(400).json({ error: 'معرف المعيار والعنوان مطلوبان للتعديل' });
+        }
+
+        const result = await pool.query(
+            `UPDATE files SET standard_id = $1, title = $2, description = $3 WHERE id = $4 RETURNING id`,
+            [standardId, title, description || '', fileId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'الملف غير موجود' });
+        }
+
+        res.json({ success: true, message: 'تم تعديل بيانات الملف بنجاح.' });
+    } catch (err) {
+        console.error('خطأ في تعديل الملف:', err);
+        res.status(500).json({ error: 'خطأ في تعديل بيانات الملف' });
+    }
+});
+
+// 5. حذف ملف (محمي بكلمة سر الأدمن)
+app.delete('/api/files/:id', requireAdmin, async (req, res) => {
+    try {
+        const fileId = req.params.id;
+
+        // 1. جلب اسم الملف من قاعدة البيانات
+        const fileResult = await pool.query('SELECT filename FROM files WHERE id = $1', [fileId]);
+        if (fileResult.rows.length === 0) {
+            return res.status(404).json({ error: 'الملف غير موجود' });
+        }
+        const filename = fileResult.rows[0].filename;
+
+        // 2. حذف الملف من مجلد uploads
+        const filePath = path.join(__dirname, 'uploads', filename);
+        fs.unlink(filePath, (err) => {
+            if (err) console.error('فشل حذف الملف من النظام:', err);
+        });
+
+        // 3. حذف سجل الملف من قاعدة البيانات
+        const deleteResult = await pool.query('DELETE FROM files WHERE id = $1 RETURNING id', [fileId]);
+
+        if (deleteResult.rows.length === 0) {
+            return res.status(404).json({ error: 'الملف غير موجود في قاعدة البيانات' });
+        }
+
+        res.json({ success: true, message: 'تم حذف الملف بنجاح.' });
+    } catch (err) {
+        console.error('خطأ في حذف الملف:', err);
+        res.status(500).json({ error: 'خطأ في حذف الملف' });
+    }
+});
+
 // ============================================
 // API Endpoints - الإحصائيات والمعايير والتقييمات
 // ============================================
 
-// 4. جلب الإحصائيات
+// 6. جلب الإحصائيات
 app.get('/api/statistics', async (req, res) => {
     try {
         const stats = await pool.query(`
@@ -275,7 +333,7 @@ app.get('/api/statistics', async (req, res) => {
     }
 });
 
-// 5. جلب المعايير
+// 7. جلب المعايير
 app.get('/api/standards', async (req, res) => {
     try {
         const standards = await pool.query('SELECT id, code, name, description FROM standards ORDER BY id');
@@ -286,7 +344,7 @@ app.get('/api/standards', async (req, res) => {
     }
 });
 
-// 6. جلب ملفات معيار محدد
+// 8. جلب ملفات معيار محدد
 app.get('/api/standards/:id/files', async (req, res) => {
     try {
         const standardId = req.params.id;
@@ -298,7 +356,7 @@ app.get('/api/standards/:id/files', async (req, res) => {
     }
 });
 
-// 7. البحث عن ملفات
+// 9. البحث عن ملفات
 app.get('/api/search', async (req, res) => {
     try {
         const query = req.query.query;
@@ -320,7 +378,7 @@ app.get('/api/search', async (req, res) => {
     }
 });
 
-// 8. جلب ملخص التقييمات
+// 10. جلب ملخص التقييمات
 app.get('/api/ratings/summary', async (req, res) => {
     try {
         const summary = await pool.query('SELECT AVG(score) AS average_score, COUNT(id) AS total_ratings FROM ratings');
@@ -334,7 +392,7 @@ app.get('/api/ratings/summary', async (req, res) => {
     }
 });
 
-// 9. إرسال تقييم جديد
+// 11. إرسال تقييم جديد
 app.post('/api/ratings', async (req, res) => {
     try {
         const { score, comment } = req.body;
