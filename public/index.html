@@ -33,7 +33,6 @@
             color: var(--text-dark);
         }
 
-        /* ============ الهيدر ============ */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -68,4 +67,954 @@
         .btn-admin {
             background: rgba(255,255,255,0.2);
             color: white;
-            border: 
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-admin:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .admin-status {
+            color: #90EE90;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .admin-logout {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .admin-logout:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .stats-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card i {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-card p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+
+        .standards-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .standards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .standard-item {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .standard-item:hover {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+
+        .standard-item i {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .standard-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .standard-item p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .search-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #764ba2;
+        }
+
+        .files-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        #file-list-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-item {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-right: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transform: translateX(-5px);
+        }
+
+        .file-item h4 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .file-item p {
+            color: var(--text-light);
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .download-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .download-link:hover {
+            background: #764ba2;
+        }
+
+        .admin-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-delete, .btn-edit {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-edit {
+            background-color: #f59e0b;
+            color: black;
+        }
+
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+
+        .ratings-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .rating-summary {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 10px;
+        }
+
+        .stars {
+            font-size: 24px;
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .rating-form {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .rating-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-option input {
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #764ba2;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-button {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: black;
+        }
+
+        .modal h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input[type="file"] {
+            padding: 8px;
+        }
+
+        .modal .submit-btn {
+            background: #667eea;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid, .standards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 20px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20% auto;
+            }
+
+            .rating-options {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-book"></i>
+            منصة محمد القصبي
+        </div>
+        <div class="navbar-actions">
+            <button id="admin-login-btn" class="btn-admin">🔐 تسجيل دخول أدمن</button>
+            <div id="admin-status"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1><i class="fas fa-graduation-cap"></i> منصة محمد القصبي</h1>
+            <p>للمواصفات الهندسية والمتخصصة</p>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i> الإحصائيات</h2>
+            <div class="stats-grid" id="stats-grid"></div>
+        </div>
+
+        <div class="standards-section">
+            <h2 class="section-title"><i class="fas fa-list"></i> المعايير المتاحة</h2>
+            <div class="standards-grid" id="standards-grid"></div>
+        </div>
+
+        <div class="search-section">
+            <h2 class="section-title"><i class="fas fa-search"></i> البحث عن الملفات</h2>
+            <form id="search-form" class="search-form">
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن ملف...">
+                <button type="submit" class="search-btn">🔍 بحث</button>
+            </form>
+        </div>
+
+        <div class="files-section">
+            <h2 id="file-list-title" class="section-title"><i class="fas fa-folder"></i> الملفات المتاحة</h2>
+            <div id="files-list">
+                <p style="text-align: center; color: #999;">لا توجد ملفات حالياً</p>
+            </div>
+        </div>
+
+        <div class="ratings-section">
+            <h2 class="section-title"><i class="fas fa-star"></i> التقييمات</h2>
+            <div id="rating-summary"></div>
+            <form id="rating-form" class="rating-form">
+                <div class="form-group">
+                    <label>قيّم هذه المنصة:</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1"> ⭐ سيء
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2"> ⭐⭐ متوسط
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3"> ⭐⭐⭐ جيد
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4"> ⭐⭐⭐⭐ جيد جداً
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5"> ⭐⭐⭐⭐⭐ ممتاز
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rating-comment">تعليقك (اختياري):</label>
+                    <textarea id="rating-comment" placeholder="شارك رأيك..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">إرسال التقييم</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>🔐 تسجيل دخول الأدمن</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="admin-password">كلمة السر:</label>
+                    <input type="password" id="admin-password" required>
+                </div>
+                <button type="submit" class="submit-btn">دخول</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>📤 رفع ملف جديد</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file-title">اسم الملف:</label>
+                    <input type="text" id="file-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="file-description">الوصف:</label>
+                    <input type="text" id="file-description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="file-standard">المعيار:</label>
+                    <select id="file-standard" name="standardId" required>
+                        <option value="">اختر معيار...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="file-upload">الملف:</label>
+                    <input type="file" id="file-upload" name="file" required>
+                </div>
+                <button type="submit" class="submit-btn">رفع الملف</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let adminToken = localStorage.getItem('adminToken') || null;
+
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const adminStatusDiv = document.getElementById('admin-status');
+        const uploadFileBtn = document.createElement('button');
+        uploadFileBtn.id = 'upload-file-btn';
+        uploadFileBtn.className = 'btn-admin';
+        uploadFileBtn.textContent = '📤 رفع ملف';
+        uploadFileBtn.style.display = 'none';
+
+        const loginModal = document.getElementById('login-modal');
+        const uploadModal = document.getElementById('upload-modal');
+        const closeButtons = document.querySelectorAll('.close-button');
+        const loginForm = document.getElementById('login-form');
+        const uploadForm = document.getElementById('upload-form');
+        const statsGrid = document.getElementById('stats-grid');
+        const standardsGrid = document.getElementById('standards-grid');
+        const filesList = document.getElementById('files-list');
+        const searchForm = document.getElementById('search-form');
+        const ratingForm = document.getElementById('rating-form');
+        const ratingSummaryDiv = document.getElementById('rating-summary');
+        const fileListTitle = document.getElementById('file-list-title');
+
+        document.querySelector('.navbar-actions').insertBefore(uploadFileBtn, document.querySelector('.navbar-actions').firstChild);
+
+        function showMessage(message, type = 'error') {
+            alert(`${type.toUpperCase()}: ${message}`);
+        }
+
+        function updateAdminStatus() {
+            if (adminToken) {
+                adminLoginBtn.style.display = 'none';
+                uploadFileBtn.style.display = 'block';
+                adminStatusDiv.innerHTML = `
+                    <span class="admin-status">✅ مرحباً، أدمن</span>
+                    <button id="admin-logout-btn" class="admin-logout">🚪 خروج</button>
+                `;
+                document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+            } else {
+                adminLoginBtn.style.display = 'block';
+                uploadFileBtn.style.display = 'none';
+                adminStatusDiv.innerHTML = '';
+            }
+        }
+
+        async function fetchData(endpoint) {
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (adminToken) headers['X-Admin-Token'] = adminToken;
+                const response = await fetch(`${API_BASE}${endpoint}`, { headers });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logoutAdmin();
+                        showMessage('انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.', 'warning');
+                        return null;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showMessage('حدث خطأ أثناء جلب البيانات.', 'error');
+                return null;
+            }
+        }
+
+        async function loginAdmin(e) {
+            e.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            try {
+                const response = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    adminToken = data.token;
+                    localStorage.setItem('adminToken', adminToken);
+                    updateAdminStatus();
+                    loginModal.style.display = 'none';
+                    loginForm.reset();
+                    showMessage('تم تسجيل الدخول بنجاح!', 'success');
+                } else {
+                    showMessage(data.message || 'كلمة السر غير صحيحة.', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('حدث خطأ أثناء تسجيل الدخول.', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            adminToken = null;
+            localStorage.removeItem('adminToken');
+            updateAdminStatus();
+            showMessage('تم تسجيل الخروج.', 'info');
+        }
+
+        async function uploadFile(e) {
+            e.preventDefault();
+            if (!adminToken) {
+                showMessage('يجب تسجيل الدخول كأدمن.', 'error');
+                return;
+            }
+            const formData = new FormData(uploadForm);
+            try {
+                const response = await fetch(`${API_BASE}/files/upload`, {
+                    method: 'POST',
+                    headers: { 'X-Admin-Token': adminToken },
+                    body: formData
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    uploadModal.style.display = 'none';
+                    uploadForm.reset();
+                    showMessage('تم رفع الملف بنجاح!', 'success');
+                    loadStatistics();
+                    loadStandards();
+                } else {
+                    showMessage(data.message || 'فشل رفع الملف.', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('حدث خطأ أثناء رفع الملف.', 'error');
+            }
+        }
+
+        async function loadStatistics() {
+            const data = await fetchData('/statistics');
+            if (!data) return;
+            statsGrid.innerHTML = '';
+            data.forEach(stat => {
+                let iconClass = '';
+                switch (stat.code) {
+                    case 'ASTM': iconClass = 'fas fa-vial'; break;
+                    case 'ACI': iconClass = 'fas fa-cube'; break;
+                    case 'BS': iconClass = 'fas fa-flag-usa'; break;
+                    case 'OTHER': iconClass = 'fas fa-folder-open'; break;
+                }
+                const card = document.createElement('div');
+                card.className = 'stat-card';
+                card.innerHTML = `<i class="${iconClass}"></i><h3>${stat.name}</h3><p>📄 ${stat.fileCount} ملف</p><p>⬇️ ${stat.totalDownloads} تحميل</p>`;
+                statsGrid.appendChild(card);
+            });
+        }
+
+        async function loadStandards() {
+            const data = await fetchData('/standards');
+            if (!data) return;
+            standardsGrid.innerHTML = '';
+            data.forEach(standard => {
+                let iconClass = 'fas fa-file-alt';
+                switch (standard.code) {
+                    case 'ASTM': iconClass = 'fas fa-vial'; break;
+                    case 'ACI': iconClass = 'fas fa-cube'; break;
+                    case 'BS': iconClass = 'fas fa-flag-usa'; break;
+                    case 'OTHER': iconClass = 'fas fa-folder-open'; break;
+                }
+                const item = document.createElement('div');
+                item.className = 'standard-item';
+                item.innerHTML = `<i class="${iconClass}"></i><h4>${standard.name} (${standard.code})</h4><p>${standard.description}</p>`;
+                item.addEventListener('click', () => loadStandardFiles(standard.id, standard.name));
+                standardsGrid.appendChild(item);
+            });
+        }
+
+        async function loadStandardFiles(standardId, standardName) {
+            const data = await fetchData(`/standards/${standardId}/files`);
+            if (!data) return;
+            fileListTitle.textContent = `ملفات المعيار: ${standardName}`;
+            filesList.innerHTML = '';
+            if (data.length === 0) {
+                filesList.innerHTML = '<p>لا توجد ملفات.</p>';
+                return;
+            }
+            data.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                let adminButtons = '';
+                if (adminToken) {
+                    adminButtons = `
+                        <div class="admin-actions">
+                            <button class="btn-delete" onclick="deleteFile(${file.id})">🗑️ حذف</button>
+                            <button class="btn-edit" onclick="editFile(${file.id})">✏️ تعديل</button>
+                        </div>
+                    `;
+                }
+                item.innerHTML = `<h4>📄 ${file.title}</h4><p>${file.description}</p><p>⬇️ ${file.downloads}</p><a href="${API_BASE}/files/${file.id}/download" target="_blank" class="download-link">تحميل</a>${adminButtons}`;
+                filesList.appendChild(item);
+            });
+        }
+
+        async function deleteFile(fileId) {
+            if (!adminToken) {
+                showMessage('يجب تسجيل الدخول.', 'error');
+                return;
+            }
+            if (!confirm('هل تريد حذف هذا الملف؟')) return;
+            try {
+                const response = await fetch(`${API_BASE}/files/${fileId}`, {
+                    method: 'DELETE',
+                    headers: { 'X-Admin-Token': adminToken }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage('تم الحذف!', 'success');
+                    loadStatistics();
+                    loadStandards();
+                } else {
+                    showMessage(data.error || 'فشل الحذف.', 'error');
+                }
+            } catch (error) {
+                showMessage('خطأ أثناء الحذف.', 'error');
+            }
+        }
+
+        function editFile(fileId) {
+            if (!adminToken) {
+                showMessage('يجب تسجيل الدخول.', 'error');
+                return;
+            }
+            showMessage('قريباً: التعديل سيكون متاحاً قريباً.', 'info');
+        }
+
+        async function searchFiles(e) {
+            e.preventDefault();
+            const query = document.getElementById('search-input').value;
+            if (!query) return;
+            const data = await fetchData(`/search?query=${encodeURIComponent(query)}`);
+            if (!data) return;
+            fileListTitle.textContent = `نتائج: "${query}"`;
+            filesList.innerHTML = '';
+            if (data.length === 0) {
+                filesList.innerHTML = '<p>لا توجد نتائج.</p>';
+                return;
+            }
+            data.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                let adminButtons = '';
+                if (adminToken) {
+                    adminButtons = `
+                        <div class="admin-actions">
+                            <button class="btn-delete" onclick="deleteFile(${file.id})">🗑️ حذف</button>
+                            <button class="btn-edit" onclick="editFile(${file.id})">✏️ تعديل</button>
+                        </div>
+                    `;
+                }
+                item.innerHTML = `<h4>📄 ${file.title}</h4><p>${file.description}</p><p>📋 ${file.code}</p><p>⬇️ ${file.downloads}</p><a href="${API_BASE}/files/${file.id}/download" target="_blank" class="download-link">تحميل</a>${adminButtons}`;
+                filesList.appendChild(item);
+            });
+        }
+
+        async function loadRatingSummary() {
+            const data = await fetchData('/ratings/summary');
+            if (!data) return;
+            const avg = parseFloat(data.average_score).toFixed(1);
+            const count = data.total_ratings;
+            ratingSummaryDiv.innerHTML = `<div class="rating-summary"><div class="stars">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5 - Math.round(avg))}</div><p>متوسط: ${avg}/5 (${count})</p></div>`;
+        }
+
+        async function submitRating(e) {
+            e.preventDefault();
+            const score = document.querySelector('input[name="rating"]:checked')?.value;
+            const comment = document.getElementById('rating-comment').value;
+            if (!score) {
+                showMessage('اختر التقييم.', 'warning');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE}/ratings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ score: parseInt(score), comment })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage('شكراً!', 'success');
+                    ratingForm.reset();
+                    loadRatingSummary();
+                } else {
+                    showMessage(data.message || 'فشل التقييم.', 'error');
+                }
+            } catch (error) {
+                showMessage('خطأ.', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStatistics();
+            loadStandards();
+            loadRatingSummary();
+            updateAdminStatus();
+
+            adminLoginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'block';
+            });
+
+            uploadFileBtn.addEventListener('click', () => {
+                if (adminToken) {
+                    uploadModal.style.display = 'block';
+                } else {
+                    showMessage('سجل دخول أولاً.', 'error');
+                }
+            });
+
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.target.closest('.modal').style.display = 'none';
+                });
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) loginModal.style.display = 'none';
+                if (e.target === uploadModal) uploadModal.style.display = 'none';
+            });
+
+            loginForm.addEventListener('submit', loginAdmin);
+            uploadForm.addEventListener('submit', uploadFile);
+            searchForm.addEventListener('submit', searchFiles);
+            ratingForm.addEventListener('submit', submitRating);
+        });
+    </script>
+</body>
+</html>
