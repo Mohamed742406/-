@@ -67,7 +67,7 @@ pool.on('connect', () => {
 // ============================================
 async function initializeDatabase() {
   try {
-    // جدول المعايير (Standards)
+      // جدول المعايير (Standards)
     await pool.query(`
       CREATE TABLE IF NOT EXISTS standards (
         id SERIAL PRIMARY KEY,
@@ -78,6 +78,16 @@ async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // إدخال البيانات الأولية للمعايير
+    await pool.query(`
+        INSERT INTO standards (id, code, name, description) VALUES
+        (1, 'ASTM', 'معايير ASTM الأمريكية', 'معايير الجمعية الأمريكية للاختبار والمواد') ON CONFLICT (id) DO NOTHING,
+        (2, 'ACI', 'معايير ACI الخرسانية', 'معايير معهد الخرسانة الأمريكي') ON CONFLICT (id) DO NOTHING,
+        (3, 'BS', 'معايير BS البريطانية', 'معايير المواصفات البريطانية') ON CONFLICT (id) DO NOTHING,
+        (4, 'OTHER', 'أكواد أخرى', 'معايير دولية وإقليمية أخرى') ON CONFLICT (id) DO NOTHING;
+    `);
+
 
     // جدول الملفات (Files)
     await pool.query(`
