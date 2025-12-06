@@ -1,1 +1,563 @@
+/*
+ * ملف style.css
+ * تم تصميم هذا الملف ليتوافق مع متطلبات الخلفية غير البيضاء والتصميم العربي RTL.
+ *
+ * ملاحظة: تم استخدام متغيرات CSS لتسهيل التخصيص.
+ *
+ * الألوان الأساسية:
+ * --primary: بنفسجي (للهيدر والتركيز)
+ * --secondary: أزرق سماوي (للتفاصيل)
+ * --bg-soft: رمادي/أزرق فاتح (لخلفية الـ container والكروت - بديل الأبيض)
+ * --text-dark: رمادي داكن جداً (للنصوص)
+ * --bg-dark-start: كحلي غامق (لبداية خلفية الـ body)
+ * --bg-dark-end: رمادي مزرق غامق (لنهاية خلفية الـ body)
+ */
+
+:root {
+    --primary: #6366f1; /* Indigo-500 */
+    --secondary: #0ea5e9; /* Sky-500 */
+    --bg-soft: #e4edf7; /* بديل الأبيض - رمادي/أزرق فاتح */
+    --text-dark: #1f2937; /* Gray-800 */
+    --bg-dark-start: #1e293b; /* Slate-800 */
+    --bg-dark-end: #0f172a; /* Slate-900 */
+    --border-color: #a78bfa; /* Violet-400 */
+    --card-bg-1: rgba(167, 139, 250, 0.1); /* Violet-400 with opacity */
+    --card-bg-2: rgba(14, 165, 233, 0.1); /* Sky-500 with opacity */
+    --card-bg-3: rgba(234, 179, 8, 0.1); /* Amber-500 with opacity */
+    --card-bg-4: rgba(107, 114, 128, 0.1); /* Gray-500 with opacity */
+}
+
+/* ============================================
+ * قواعد تصميم الخلفية العامة (Body)
+ * ممنوع الأبيض الصريح
+ * ============================================ */
+body {
+    font-family: 'Arial', sans-serif;
+    color: var(--text-dark);
+    margin: 0;
+    padding: 20px;
+    direction: rtl;
+    text-align: right;
+    min-height: 100vh;
+
+    /* Gradient هادئ من رمادي مزرق إلى رمادي أغمق */
+    background: linear-gradient(135deg, var(--bg-dark-start) 0%, var(--bg-dark-end) 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* طبقة Pattern خرسانة/شبكة شفافة جدًا */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* استخدام SVG بسيط لنمط شبكة أو نقط */
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239CA3AF' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zm1 5v1H5z'/%3E%3C/g%3E%3C/svg%3E" );
+    opacity: 1; /* Opacity مُضمن في fill-opacity */
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ============================================
+ * Container الرئيسي (بديل الأبيض)
+ * ============================================ */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--bg-soft); /* درجة فاتحة من الرمادي/الأزرق */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color); /* Border رفيع بنفسجي فاتح */
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+ * الهيدر والشريط العلوي (Banner)
+ * ============================================ */
+.header-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: white;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-banner h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+}
+
+.header-banner .icon-helmet {
+    margin-left: 10px;
+    font-size: 2rem;
+}
+
+.lab-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.lab-icons .icon {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.lab-icons .icon:hover {
+    opacity: 1;
+}
+
+.admin-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.admin-area button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.admin-area button:hover {
+    background-color: #4f46e5; /* Indigo-600 */
+    transform: translateY(-1px);
+}
+
+.admin-status {
+    color: var(--text-dark);
+    font-weight: bold;
+}
+
+/* ============================================
+ * الأقسام الرئيسية والعناوين
+ * ============================================ */
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5); /* طبقة شفافة خفيفة فوق الخلفية */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+/* ============================================
+ * قسم الإحصائيات (الكروت)
+ * ============================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--bg-soft); /* بديل الأبيض */
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+}
+
+.stat-card p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 5px 0 0;
+}
+
+/* ألوان خلفية الكروت وأيقونات Overlay */
+.stat-card::before {
+    content: attr(data-icon);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    opacity: 0.05; /* تعتيم منخفض جداً */
+    pointer-events: none;
+    font-family: 'Font Awesome 5 Free'; /* افتراض استخدام Font Awesome */
+    font-weight: 900;
+}
+
+.stat-card[data-code="ASTM"] {
+    background-color: var(--card-bg-1);
+}
+.stat-card[data-code="ASTM"]::before {
+    content: "\f7c9"; /* أيقونة عينة تربة/أسفلت (مثل مخروط) */
+    color: var(--primary);
+}
+
+.stat-card[data-code="ACI"] {
+    background-color: var(--card-bg-2);
+}
+.stat-card[data-code="ACI"]::before {
+    content: "\f5b8"; /* أيقونة عمود خرساني (مثل مكعب) */
+    color: var(--secondary);
+}
+
+.stat-card[data-code="BS"] {
+    background-color: var(--card-bg-3);
+}
+.stat-card[data-code="BS"]::before {
+    content: "\f024"; /* أيقونة علم (مثل علم بريطانيا) */
+    color: #eab308; /* Amber-500 */
+}
+
+.stat-card[data-code="OTHER"] {
+    background-color: var(--card-bg-4);
+}
+.stat-card[data-code="OTHER"]::before {
+    content: "\f07b"; /* أيقونة مجلد */
+    color: var(--text-dark);
+}
+
+/* ============================================
+ * قسم المعايير والملفات
+ * ============================================ */
+.standards-grid, .files-list {
+    display: grid;
+    gap: 15px;
+}
+
+.standards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.standard-item, .file-item {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--bg-soft); /* بديل الأبيض */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    border-right: 5px solid var(--primary);
+}
+
+.standard-item:hover, .file-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.standard-item h4, .file-item h4 {
+    margin: 0 0 5px;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.file-item p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.file-item .download-link {
+    display: block;
+    margin-top: 10px;
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.file-item .download-link:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+ * قسم البحث
+ * ============================================ */
+#search-section {
+    background-color: rgba(255, 255, 255, 0.7); /* أفتح قليلاً من لون الصندوق */
+    border-radius: 10px;
+    padding: 25px;
+}
+
+#search-form {
+    display: flex;
+    gap: 10px;
+}
+
+#search-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    text-align: right;
+}
+
+#search-button {
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#search-button:hover {
+    background-color: #0284c7; /* Sky-600 */
+}
+
+/* ============================================
+ * قسم التقييم
+ * ============================================ */
+#rating-section {
+    background-color: rgba(255, 255, 255, 0.7); /* Panel خفيف */
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.rating-summary {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--card-bg-1);
+}
+
+.rating-summary .stars {
+    font-size: 2rem;
+    color: gold;
+}
+
+.rating-summary p {
+    margin: 5px 0 0;
+    font-weight: bold;
+}
+
+#rating-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
+
+#submit-rating {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+#submit-rating:hover {
+    background-color: #4f46e5;
+}
+
+/* ============================================
+ * Modal لتسجيل الدخول ورفع الملفات
+ * ============================================ */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* مخفي افتراضياً */
+}
+
+.modal-content {
+    background-color: var(--bg-soft);
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.close-button {
+    color: var(--text-dark);
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+.modal-content h3 {
+    color: var(--primary);
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.modal-content input[type="password"],
+.modal-content input[type="text"],
+.modal-content select,
+.modal-content input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.modal-content button {
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.modal-content button:hover {
+    background-color: #0284c7;
+}
+
+/* ============================================
+ * Font Awesome Icons (للديكور)
+ * ============================================ */
+.fa-icon {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
+/* أيقونات المعمل في الهيدر */
+.icon-helmet::before { content: "\f807"; } /* خوذة مهندس */
+.icon-concrete-breaker::before { content: "\f7e3"; } /* جهاز كسر خرسانة */
+.icon-sieve::before { content: "\f7d9"; } /* جهاز منخل هزاز */
+.icon-asphalt::before { content: "\f6e3"; } /* جهاز مارشال أسفلت */
+.icon-upload::before { content: "\f093"; } /* أيقونة رفع */
+.icon-download::before { content: "\f019"; } /* أيقونة تحميل */
+.icon-search::before { content: "\f002"; } /* أيقونة بحث */
+.icon-star::before { content: "\f005"; } /* أيقونة نجمة */
+.icon-folder::before { content: "\f07b"; } /* أيقونة مجلد */
+.icon-file::before { content: "\f15b"; } /* أيقونة ملف */
+.icon-admin::before { content: "\f007"; } /* أيقونة أدمن */
+.icon-logout::before { content: "\f2f5"; } /* أيقونة خروج */
+.icon-code::before { content: "\f121"; } /* أيقونة كود */
+.icon-stats::before { content: "\f65e"; } /* أيقونة إحصائيات */
+.icon-rating::before { content: "\f005"; } /* أيقونة تقييم */
+.icon-soil::before { content: "\f7c9"; } /* أيقونة تربة */
+.icon-concrete::before { content: "\f5b8"; } /* أيقونة خرسانة */
+.icon-flag::before { content: "\f024"; } /* أيقونة علم */
+
+/* ============================================
+ * الاستجابة (Responsive)
+ * ============================================ */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    .header-banner {
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+    }
+
+    .header-banner h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .lab-icons {
+        margin-top: 10px;
+        gap: 10px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-area {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    #search-form {
+        flex-direction: column;
+    }
+
+    #search-button {
+        width: 100%;
+    }
+}
 
