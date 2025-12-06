@@ -791,6 +791,21 @@
             showMessage('تم تسجيل الخروج.', 'info');
         }
 
+        async function loadStandardsForUpload() {
+            const standards = await fetchData('/standards');
+            if (!standards) return;
+            
+            const select = document.getElementById('file-standard');
+            select.innerHTML = '<option value="">اختر معيار...</option>';
+            
+            standards.forEach(standard => {
+                const option = document.createElement('option');
+                option.value = standard.id;
+                option.textContent = `${standard.name} (${standard.code})`;
+                select.appendChild(option);
+            });
+        }
+
         async function uploadFile(e) {
             e.preventDefault();
             if (!adminToken) {
@@ -862,7 +877,7 @@
         async function loadStandardFiles(standardId, standardName) {
             const data = await fetchData(`/standards/${standardId}/files`);
             if (!data) return;
-            fileListTitle.textContent = `ملفات المعيار: ${standardName}`;
+            fileListTitle.innerHTML = `<i class="fas fa-folder"></i> ملفات المعيار: ${standardName}`;
             filesList.innerHTML = '';
             if (data.length === 0) {
                 filesList.innerHTML = '<p>لا توجد ملفات.</p>';
@@ -923,7 +938,7 @@
             if (!query) return;
             const data = await fetchData(`/search?query=${encodeURIComponent(query)}`);
             if (!data) return;
-            fileListTitle.textContent = `نتائج: "${query}"`;
+            fileListTitle.innerHTML = `<i class="fas fa-search"></i> نتائج: "${query}"`;
             filesList.innerHTML = '';
             if (data.length === 0) {
                 filesList.innerHTML = '<p>لا توجد نتائج.</p>';
@@ -991,8 +1006,9 @@
                 loginModal.style.display = 'block';
             });
 
-            uploadFileBtn.addEventListener('click', () => {
+            uploadFileBtn.addEventListener('click', async () => {
                 if (adminToken) {
+                    await loadStandardsForUpload();
                     uploadModal.style.display = 'block';
                 } else {
                     showMessage('سجل دخول أولاً.', 'error');
