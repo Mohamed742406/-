@@ -21,6 +21,8 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// توجيه الملفات الثابتة من مجلد 'public'
 app.use(express.static('public'));
 
 // توجيه الصفحة الرئيسية لتقديم index.html
@@ -31,9 +33,15 @@ app.get('/', (req, res) => {
 // ============================================
 // إعدادات Multer لحفظ الملفات
 // ============================================
+// التأكد من وجود مجلد uploads
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'uploads'));
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -67,7 +75,7 @@ pool.on('connect', () => {
 // ============================================
 async function initializeDatabase() {
   try {
-      // جدول المعايير (Standards)
+    // جدول المعايير (Standards)
     await pool.query(`
       CREATE TABLE IF NOT EXISTS standards (
         id SERIAL PRIMARY KEY,
@@ -79,7 +87,7 @@ async function initializeDatabase() {
       )
     `);
 
-    // إدخال البيانات الأولية للمعايير
+    // إدخال البيانات الأولية للمعايير (تمت إضافتها لحل مشكلة الإحصائيات)
     await pool.query(`
         INSERT INTO standards (id, code, name, description) VALUES
         (1, 'ASTM', 'معايير ASTM الأمريكية', 'معايير الجمعية الأمريكية للاختبار والمواد') ON CONFLICT (id) DO NOTHING,
@@ -87,7 +95,6 @@ async function initializeDatabase() {
         (3, 'BS', 'معايير BS البريطانية', 'معايير المواصفات البريطانية') ON CONFLICT (id) DO NOTHING,
         (4, 'OTHER', 'أكواد أخرى', 'معايير دولية وإقليمية أخرى') ON CONFLICT (id) DO NOTHING;
     `);
-
 
     // جدول الملفات (Files)
     await pool.query(`
@@ -114,129 +121,83 @@ async function initializeDatabase() {
       )
     `);
 
-    console.log('✅ تم إنشاء جميع الجداول بنجاح');
-
-    // إدراج البيانات الأولية للمعايير
-    insertInitialStandards();
+    console.log('✅ تم تهيئة قاعدة البيانات والجداول بنجاح');
   } catch (err) {
     console.error('❌ خطأ في تهيئة قاعدة البيانات:', err);
   }
 }
 
-// ============================================
-// إدراج البيانات الأولية
-// ============================================
-async function insertInitialStandards() {
-  const standards = [
-    {
-      code: 'ASTM',
-      name: 'معايير ASTM الأمريكية',
-      description: 'معايير الجمعية الأمريكية للاختبار والمواد',
-      icon: '🧪'
-    },
-    {
-      code: 'ACI',
-      name: 'معايير ACI الخرسانية',
-      description: 'معايير معهد الخرسانة الأمريكي',
-      icon: '🏗️'
-    },
-    {
-      code: 'BS',
-      name: 'معايير BS البريطانية',
-      description: 'معايير المواصفات البريطانية',
-      icon: '🇬🇧'
-    },
-    {
-      code: 'OTHER',
-      name: 'معايير أخرى',
-      description: 'معايير دولية وإقليمية أخرى',
-      icon: '📋'
-    }
-  ];
-
-  for (const std of standards) {
-    try {
-      await pool.query(
-        `INSERT INTO standards (code, name, description, icon) 
-         VALUES ($1, $2, $3, $4)
-         ON CONFLICT (code) DO NOTHING`,
-        [std.code, std.name, std.description, std.icon]
-      );
-    } catch (err) {
-      console.error('خطأ في إدراج المعيار:', err);
-    }
-  }
-}
+// تشغيل الدالة عند بدء التشغيل
+initializeDatabase();
 
 // ============================================
-// Middleware للتحقق من صلاحيات الأدمن
+// API Endpoints - Middleware
 // ============================================
+
+// Middleware للتحقق من صلاحيات الأدمن (تمت إضافتها لحل مشكلة الرفع)
 function requireAdmin(req, res, next) {
-  const token = req.headers['x-admin-token'];
-  const adminPassword = process.env.ADMIN_PASSWORD;
-
-  if (!token || token !== adminPassword) {
-    return res.status(401).json({ error: 'غير مصرح - كلمة سر الأدمن غير صحيحة' });
-  }
-
-  next();
+    const adminToken = req.header('X-Admin-Token');
+    // كلمة السر هي elkasaby2025 (مخزنة في .env)
+    if (adminToken === process.env.ADMIN_PASSWORD) {
+        next();
+    } else {
+        res.status(401).json({ message: 'غير مصرح لك. يجب تسجيل الدخول كأدمن.' });
+    }
 }
 
 // ============================================
-// API Endpoints
+// API Endpoints - تسجيل الدخول والملفات
 // ============================================
 
-// 1. الحصول على جميع المعايير
-app.get('/api/standards', async (req, res) => {
+// 1. نقطة نهاية تسجيل الدخول (تمت إضافتها لحل مشكلة الرفع)
+app.post('/api/admin/login', (req, res) => {
+    const { password } = req.body;
+    if (password === process.env.ADMIN_PASSWORD) {
+        // نستخدم كلمة السر كتوكن بسيط
+        res.json({ message: 'تم تسجيل الدخول بنجاح.', token: process.env.ADMIN_PASSWORD });
+    } else {
+        res.status(401).json({ message: 'كلمة السر غير صحيحة.' });
+    }
+});
+
+// 2. نقطة نهاية رفع الملفات (محمية بكلمة سر الأدمن)
+app.post('/api/files/upload', requireAdmin, upload.single('file'), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'لم يتم اختيار ملف' });
+    }
+
+    const { standardId, title, description } = req.body;
+
+    if (!standardId || !title) {
+      // حذف الملف المرفوع في حالة الخطأ
+      fs.unlink(req.file.path, () => {});
+      return res.status(400).json({ error: 'معرف المعيار والعنوان مطلوبان' });
+    }
+
     const result = await pool.query(
-      `SELECT id, code, name, description, icon FROM standards`
+      `INSERT INTO files (standard_id, title, description, filename, original_name) 
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id`,
+      [standardId, title, description || '', req.file.filename, req.file.originalname]
     );
-    res.json(result.rows);
+
+    res.json({
+      success: true,
+      message: 'تم رفع الملف بنجاح',
+      fileId: result.rows[0].id
+    });
   } catch (err) {
-    console.error('خطأ في جلب المعايير:', err);
-    res.status(500).json({ error: 'خطأ في جلب المعايير' });
+    // حذف الملف المرفوع في حالة الخطأ
+    if (req.file) {
+      fs.unlink(req.file.path, () => {});
+    }
+    console.error('خطأ في رفع الملف:', err);
+    res.status(500).json({ error: 'خطأ في حفظ الملف' });
   }
 });
 
-// 2. الحصول على الإحصائيات
-app.get('/api/statistics', async (req, res) => {
-  try {
-    const result = await pool.query(
-      `SELECT 
-        s.id, 
-        s.code, 
-        s.name, 
-        COUNT(f.id) as fileCount,
-        COALESCE(SUM(f.downloads), 0) as totalDownloads
-      FROM standards s
-      LEFT JOIN files f ON s.id = f.standard_id
-      GROUP BY s.id, s.code, s.name`
-    );
-    res.json(result.rows);
-  } catch (err) {
-    console.error('خطأ في جلب الإحصائيات:', err);
-    res.status(500).json({ error: 'خطأ في جلب الإحصائيات' });
-  }
-});
-
-// 3. الحصول على ملفات معيار معين
-app.get('/api/standards/:id/files', async (req, res) => {
-  try {
-    const standardId = req.params.id;
-    const result = await pool.query(
-      `SELECT id, title, description, original_name, uploaded_at, downloads 
-       FROM files WHERE standard_id = $1 ORDER BY uploaded_at DESC`,
-      [standardId]
-    );
-    res.json(result.rows);
-  } catch (err) {
-    console.error('خطأ في جلب الملفات:', err);
-    res.status(500).json({ error: 'خطأ في جلب الملفات' });
-  }
-});
-
-// 4. تحميل ملف (زيادة عدد التحميلات وإرسال الملف)
+// 3. تحميل ملف (زيادة عدد التحميلات وإرسال الملف)
 app.get('/api/files/:id/download', async (req, res) => {
   try {
     const fileId = req.params.id;
@@ -271,204 +232,115 @@ app.get('/api/files/:id/download', async (req, res) => {
   }
 });
 
-// 5. رفع ملف جديد (محمي بكلمة سر الأدمن)
-app.post('/api/files/upload', requireAdmin, upload.single('file'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'لم يتم اختيار ملف' });
+// ============================================
+// API Endpoints - الإحصائيات والمعايير والتقييمات (يجب إضافتها لاحقاً)
+// ============================================
+
+// 4. جلب الإحصائيات
+app.get('/api/statistics', async (req, res) => {
+    try {
+        const stats = await pool.query(`
+            SELECT 
+                s.code, 
+                s.name, 
+                COUNT(f.id) AS file_count, 
+                COALESCE(SUM(f.downloads), 0) AS total_downloads
+            FROM standards s
+            LEFT JOIN files f ON s.id = f.standard_id
+            GROUP BY s.id, s.code, s.name
+            ORDER BY s.id;
+        `);
+        res.json(stats.rows.map(row => ({
+            code: row.code,
+            name: row.name,
+            fileCount: parseInt(row.file_count),
+            totalDownloads: parseInt(row.total_downloads)
+        })));
+    } catch (err) {
+        console.error('خطأ في جلب الإحصائيات:', err);
+        res.status(500).json({ error: 'خطأ في جلب الإحصائيات' });
     }
-
-    const { standardId, title, description } = req.body;
-
-    if (!standardId || !title) {
-      return res.status(400).json({ error: 'معرف المعيار والعنوان مطلوبان' });
-    }
-
-    const result = await pool.query(
-      `INSERT INTO files (standard_id, title, description, filename, original_name) 
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id`,
-      [standardId, title, description || '', req.file.filename, req.file.originalname]
-    );
-
-    res.json({
-      success: true,
-      message: 'تم رفع الملف بنجاح',
-      fileId: result.rows[0].id
-    });
-  } catch (err) {
-    // حذف الملف المرفوع في حالة الخطأ
-    if (req.file) {
-      fs.unlink(req.file.path, () => {});
-    }
-    console.error('خطأ في رفع الملف:', err);
-    res.status(500).json({ error: 'خطأ في حفظ الملف' });
-  }
 });
 
-// 6. حذف ملف (أدمن فقط)
-app.delete('/api/files/:id', requireAdmin, async (req, res) => {
-  try {
-    const fileId = req.params.id;
-
-    const result = await pool.query(
-      `SELECT filename FROM files WHERE id = $1`,
-      [fileId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'الملف غير موجود' });
+// 5. جلب المعايير
+app.get('/api/standards', async (req, res) => {
+    try {
+        const standards = await pool.query('SELECT id, code, name, description FROM standards ORDER BY id');
+        res.json(standards.rows);
+    } catch (err) {
+        console.error('خطأ في جلب المعايير:', err);
+        res.status(500).json({ error: 'خطأ في جلب المعايير' });
     }
+});
 
-    const file = result.rows[0];
-
-    // حذف الملف من النظام
-    const filePath = path.join(__dirname, 'uploads', file.filename);
-    fs.unlink(filePath, (err) => {
-      if (err && err.code !== 'ENOENT') {
-        console.error('خطأ في حذف الملف:', err);
-      }
-    });
-
-    // حذف من قاعدة البيانات
-    await pool.query(
-      `DELETE FROM files WHERE id = $1`,
-      [fileId]
-    );
-
-    res.json({ success: true, message: 'تم حذف الملف بنجاح' });
-  } catch (err) {
-    console.error('خطأ في حذف الملف:', err);
-    res.status(500).json({ error: 'خطأ في حذف الملف' });
-  }
+// 6. جلب ملفات معيار محدد
+app.get('/api/standards/:id/files', async (req, res) => {
+    try {
+        const standardId = req.params.id;
+        const files = await pool.query('SELECT id, title, description, downloads FROM files WHERE standard_id = $1 ORDER BY uploaded_at DESC', [standardId]);
+        res.json(files.rows);
+    } catch (err) {
+        console.error('خطأ في جلب ملفات المعيار:', err);
+        res.status(500).json({ error: 'خطأ في جلب ملفات المعيار' });
+    }
 });
 
 // 7. البحث عن ملفات
 app.get('/api/search', async (req, res) => {
-  try {
-    const query = req.query.query || '';
-
-    if (!query.trim()) {
-      return res.json([]);
+    try {
+        const query = req.query.query;
+        if (!query) {
+            return res.json([]);
+        }
+        const searchPattern = `%${query}%`;
+        const files = await pool.query(`
+            SELECT f.id, f.title, f.description, f.downloads, s.code 
+            FROM files f
+            JOIN standards s ON f.standard_id = s.id
+            WHERE f.title ILIKE $1 OR f.description ILIKE $1
+            ORDER BY f.uploaded_at DESC
+        `, [searchPattern]);
+        res.json(files.rows);
+    } catch (err) {
+        console.error('خطأ في البحث عن الملفات:', err);
+        res.status(500).json({ error: 'خطأ في البحث عن الملفات' });
     }
-
-    const searchTerm = `%${query}%`;
-    const result = await pool.query(
-      `SELECT id, title, description, original_name, uploaded_at, downloads 
-       FROM files 
-       WHERE title ILIKE $1 OR description ILIKE $2
-       ORDER BY uploaded_at DESC`,
-      [searchTerm, searchTerm]
-    );
-
-    res.json(result.rows);
-  } catch (err) {
-    console.error('خطأ في البحث:', err);
-    res.status(500).json({ error: 'خطأ في البحث' });
-  }
 });
 
-// 8. إضافة تقييم
-app.post('/api/ratings', async (req, res) => {
-  try {
-    const { score, comment } = req.body;
-
-    // التحقق من صحة البيانات
-    if (!score || score < 1 || score > 5) {
-      return res.status(400).json({ error: 'التقييم يجب أن يكون بين 1 و 5' });
-    }
-
-    const result = await pool.query(
-      `INSERT INTO ratings (score, comment) VALUES ($1, $2)
-       RETURNING id`,
-      [score, comment || '']
-    );
-
-    res.json({
-      success: true,
-      message: 'شكراً لتقييمك',
-      ratingId: result.rows[0].id
-    });
-  } catch (err) {
-    console.error('خطأ في حفظ التقييم:', err);
-    res.status(500).json({ error: 'خطأ في حفظ التقييم' });
-  }
-});
-
-// 9. الحصول على ملخص التقييمات
+// 8. جلب ملخص التقييمات
 app.get('/api/ratings/summary', async (req, res) => {
-  try {
-    const result = await pool.query(
-      `SELECT 
-        COUNT(*) as totalRatings,
-        AVG(score) as averageScore,
-        MIN(score) as minScore,
-        MAX(score) as maxScore
-      FROM ratings`
-    );
-
-    const row = result.rows[0];
-    res.json({
-      totalRatings: parseInt(row.totalratings) || 0,
-      averageScore: row.averagescore ? parseFloat(row.averagescore).toFixed(2) : 0,
-      minScore: row.minscore || 0,
-      maxScore: row.maxscore || 0
-    });
-  } catch (err) {
-    console.error('خطأ في جلب ملخص التقييمات:', err);
-    res.status(500).json({ error: 'خطأ في جلب ملخص التقييمات' });
-  }
+    try {
+        const summary = await pool.query('SELECT AVG(score) AS average_score, COUNT(id) AS total_ratings FROM ratings');
+        res.json({
+            average_score: summary.rows[0].average_score || 0,
+            total_ratings: parseInt(summary.rows[0].total_ratings) || 0
+        });
+    } catch (err) {
+        console.error('خطأ في جلب ملخص التقييمات:', err);
+        res.status(500).json({ error: 'خطأ في جلب ملخص التقييمات' });
+    }
 });
 
-// 10. تسجيل دخول الأدمن
-app.post('/api/admin/login', (req, res) => {
-  const { password } = req.body;
-  const adminPassword = process.env.ADMIN_PASSWORD;
-
-  if (!password || password !== adminPassword) {
-    return res.status(401).json({ error: 'كلمة السر غير صحيحة' });
-  }
-
-  res.json({
-    success: true,
-    token: adminPassword,
-    message: 'تم تسجيل الدخول بنجاح'
-  });
+// 9. إرسال تقييم جديد
+app.post('/api/ratings', async (req, res) => {
+    try {
+        const { score, comment } = req.body;
+        if (!score || score < 1 || score > 5) {
+            return res.status(400).json({ error: 'التقييم (score) يجب أن يكون بين 1 و 5.' });
+        }
+        
+        await pool.query('INSERT INTO ratings (score, comment) VALUES ($1, $2)', [score, comment || null]);
+        res.status(201).json({ message: 'تم إرسال التقييم بنجاح.' });
+    } catch (err) {
+        console.error('خطأ في إرسال التقييم:', err);
+        res.status(500).json({ error: 'خطأ في إرسال التقييم' });
+    }
 });
 
-// 11. التحقق من حالة الأدمن
-app.get('/api/admin/status', (req, res) => {
-  const token = req.headers['x-admin-token'];
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  const isAdmin = token === adminPassword;
 
-  res.json({ isAdmin });
+// ============================================
+// تشغيل الخادم
+// ============================================
+app.listen(port, () => {
+  console.log(`Your service is live 🎉 on port ${port}`);
 });
-
-// ============================================
-// معالجة الأخطاء العامة
-// ============================================
-app.use((err, req, res, next) => {
-  console.error('خطأ:', err);
-  res.status(500).json({ error: 'حدث خطأ في الخادم' });
-});
-
-// ============================================
-// بدء الخادم
-// ============================================
-app.listen(port, '0.0.0.0', () => {
-  console.log(`🚀 منصة محمد القصبي تعمل على http://0.0.0.0:${port}`);
-  console.log(`📁 مجلد الملفات: ${path.join(__dirname, 'uploads')}`);
-  console.log(`💾 قاعدة البيانات: PostgreSQL`);
-  
-  // تهيئة قاعدة البيانات
-  initializeDatabase();
-});
-
-// ============================================
-// ملاحظات للتخصيص:
-// 1. تم التحول من SQLite إلى PostgreSQL
-// 2. يتم الاتصال بـ PostgreSQL عبر متغير البيئة DATABASE_URL
-// 3. في Render، سيتم توفير DATABASE_URL تلقائياً
-// 4. لتغيير كلمة سر الأدمن: عدّل متغير ADMIN_PASSWORD في ملف .env
-// ============================================
