@@ -161,4 +161,355 @@ async function uploadFile(e) {
 
         if (response.ok) {
             uploadModal.style.display = 'none';
-            uploa
+            uploadForm.reset();
+            showMessage('تم رفع الملف بنجاح!', 'success');
+            loadStatistics(); // تحديث الإحصائيات
+            loadStandards(); // تحديث قائمة المعايير
+        } else {
+            showMessage(data.message || 'فشل رفع الملف.', 'error');
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        showMessage('حدث خطأ أثناء رفع الملف.', 'error');
+    }
+}
+
+// ============================================
+// منطق عرض البيانات (Data Display)
+// ============================================
+
+/**
+ * عرض الإحصائيات (تم التحديث لإضافة أيقونات واضحة)
+ */
+async function loadStatistics() {
+    const data = await fetchData('/statistics');
+    if (!data) return;
+
+    statsGrid.innerHTML = '';
+    data.forEach(stat => {
+        let iconClass = '';
+        let iconColor = '';
+        switch (stat.code) {
+            case 'ASTM':
+                iconClass = 'fas fa-vial'; // أنبوبة اختبار (للتربة/المواد)
+                iconColor = 'var(--primary)';
+                break;
+            case 'ACI':
+                iconClass = 'fas fa-cube'; // مكعب (للخرسانة)
+                iconColor = 'var(--secondary)';
+                break;
+            case 'BS':
+                iconClass = 'fas fa-flag-usa'; // علم (بديل للعلم البريطاني)
+                iconColor = '#eab308';
+                break;
+            case 'OTHER':
+                iconClass = 'fas fa-folder-open'; // مجلد مفتوح
+                iconColor = 'var(--text-dark)';
+                break;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'stat-card';
+        card.setAttribute('data-code', stat.code);
+        card.innerHTML = `
+            <i class="${iconClass}" style="font-size: 2rem; color: ${iconColor}; margin-bottom: 10px;"></i>
+            <h3>${stat.name}</h3>
+            <p class="icon-file">${stat.fileCount} ملف</p>
+            <p class="icon-download">${stat.totalDownloads} تحميل</p>
+        `;
+        statsGrid.appendChild(card);
+    });
+}
+
+/**
+ * عرض قائمة المعايير (تم التحديث لإضافة أيقونات)
+ */
+async function loadStandards() {
+    const data = await fetchData('/standards');
+    if (!data) return;
+
+    standardsGrid.innerHTML = '';
+    data.forEach(standard => {
+        let iconClass = 'fas fa-file-alt'; // أيقونة افتراضية
+        switch (standard.code) {
+            case 'ASTM':
+                iconClass = 'fas fa-vial';
+                break;
+            case 'ACI':
+                iconClass = 'fas fa-cube';
+                break;
+            case 'BS':
+                iconClass = 'fas fa-flag-usa';
+                break;
+            case 'OTHER':
+                iconClass = 'fas fa-folder-open';
+                break;
+        }
+
+        const item = document.createElement('div');
+        item.className = 'standard-item';
+        item.setAttribute('data-id', standard.id);
+        item.innerHTML = `
+            <h4><i class="${iconClass}"></i> ${standard.name} (${standard.code})</h4>
+            <p>${standard.description}</p>
+        `;
+        item.addEventListener('click', () => loadStandardFiles(standard.id, standard.name));
+        standardsGrid.appendChild(item);
+    });
+}
+
+/**
+ * عرض ملفات معيار محدد (مع أزرار الحذف والتعديل للأدمن)
+ * @param {number} standardId
+ * @param {string} standardName
+ */
+async function loadStandardFiles(standardId, standardName) {
+    const data = await fetchData(`/standards/${standardId}/files`);
+    if (!data) return;
+
+    fileListTitle.textContent = `ملفات المعيار: ${standardName}`;
+    filesList.innerHTML = '';
+
+    if (data.length === 0) {
+        filesList.innerHTML = '<p>لا توجد ملفات لهذا المعيار بعد.</p>';
+        return;
+    }
+
+    data.forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'file-item';
+        
+        // أزرار الحذف والتعديل تظهر فقط إذا كان المستخدم أدمن
+        let adminButtons = '';
+        if (adminToken) {
+            adminButtons = `
+                <div class="admin-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+                    <button class="btn-delete" onclick="deleteFile(${file.id})" style="background-color: #dc3545; color: white; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        🗑️ حذف
+                    </button>
+                    <button class="btn-edit" onclick="editFile(${file.id}, '${file.title}', '${file.description}')" style="background-color: #ffc107; color: black; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ✏️ تعديل
+                    </button>
+                </div>
+            `;
+        }
+
+        item.innerHTML = `
+            <h4><span class="fa-icon icon-file"></span> ${file.title}</h4>
+            <p>${file.description}</p>
+            <p>تحميلات: ${file.downloads}</p>
+            <a href="${API_BASE}/files/${file.id}/download" target="_blank" class="download-link icon-download">تحميل الملف</a>
+            ${adminButtons}
+        `;
+        filesList.appendChild(item);
+    });
+}
+
+/**
+ * حذف ملف (للأدمن فقط)
+ * @param {number} fileId
+ */
+async function deleteFile(fileId) {
+    if (!adminToken) {
+        showMessage('يجب تسجيل الدخول كأدمن لحذف الملفات.', 'error');
+        return;
+    }
+
+    if (!confirm('هل أنت متأكد من رغبتك في حذف هذا الملف؟')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/files/${fileId}`, {
+            method: 'DELETE',
+            headers: { 'X-Admin-Token': adminToken }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showMessage('تم حذف الملف بنجاح!', 'success');
+            loadStatistics(); // تحديث الإحصائيات
+            loadStandards(); // تحديث قائمة المعايير
+        } else {
+            showMessage(data.error || 'فشل حذف الملف.', 'error');
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        showMessage('حدث خطأ أثناء حذف الملف.', 'error');
+    }
+}
+
+/**
+ * تعديل ملف (للأدمن فقط)
+ * @param {number} fileId
+ * @param {string} title
+ * @param {string} description
+ */
+function editFile(fileId, title, description) {
+    if (!adminToken) {
+        showMessage('يجب تسجيل الدخول كأدمن لتعديل الملفات.', 'error');
+        return;
+    }
+
+    showMessage('خاصية التعديل قيد التطوير - يمكنك حذف وإعادة رفع الملف بمعلومات جديدة.', 'info');
+}
+
+/**
+ * البحث عن ملفات (مع أزرار الحذف والتعديل للأدمن)
+ * @param {Event} e
+ */
+async function searchFiles(e) {
+    e.preventDefault();
+    const query = document.getElementById('search-input').value;
+    if (!query) return;
+
+    const data = await fetchData(`/search?query=${encodeURIComponent(query)}`);
+    if (!data) return;
+
+    fileListTitle.textContent = `نتائج البحث عن: "${query}"`;
+    filesList.innerHTML = '';
+
+    if (data.length === 0) {
+        filesList.innerHTML = '<p>لا توجد نتائج مطابقة لبحثك.</p>';
+        return;
+    }
+
+    data.forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'file-item';
+        
+        // أزرار الحذف والتعديل تظهر فقط إذا كان المستخدم أدمن
+        let adminButtons = '';
+        if (adminToken) {
+            adminButtons = `
+                <div class="admin-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+                    <button class="btn-delete" onclick="deleteFile(${file.id})" style="background-color: #dc3545; color: white; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        🗑️ حذف
+                    </button>
+                    <button class="btn-edit" onclick="editFile(${file.id}, '${file.title}', '${file.description}')" style="background-color: #ffc107; color: black; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ✏️ تعديل
+                    </button>
+                </div>
+            `;
+        }
+
+        item.innerHTML = `
+            <h4><span class="fa-icon icon-file"></span> ${file.title}</h4>
+            <p>${file.description}</p>
+            <p>المعيار: ${file.code}</p>
+            <p>تحميلات: ${file.downloads}</p>
+            <a href="${API_BASE}/files/${file.id}/download" target="_blank" class="download-link icon-download">تحميل الملف</a>
+            ${adminButtons}
+        `;
+        filesList.appendChild(item);
+    });
+}
+
+// ============================================
+// منطق التقييم (Rating Logic)
+// ============================================
+
+/**
+ * عرض ملخص التقييم
+ */
+async function loadRatingSummary() {
+    const data = await fetchData('/ratings/summary');
+    if (!data) return;
+
+    const avg = parseFloat(data.average_score).toFixed(1);
+    const count = data.total_ratings;
+
+    ratingSummaryDiv.innerHTML = `
+        <div class="rating-summary">
+            <div class="stars">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5 - Math.round(avg))}</div>
+            <p>متوسط التقييم: ${avg} من 5</p>
+            <p>(${count} تقييم)</p>
+        </div>
+    `;
+}
+
+/**
+ * إرسال تقييم جديد
+ * @param {Event} e
+ */
+async function submitRating(e) {
+    e.preventDefault();
+    const score = document.querySelector('input[name="rating"]:checked')?.value;
+    const comment = document.getElementById('rating-comment').value;
+
+    if (!score) {
+        showMessage('الرجاء اختيار عدد النجوم.', 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/ratings`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ score: parseInt(score), comment })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showMessage('شكراً لتقييمك!', 'success');
+            ratingForm.reset();
+            loadRatingSummary(); // تحديث الملخص
+        } else {
+            showMessage(data.message || 'فشل إرسال التقييم.', 'error');
+        }
+    } catch (error) {
+        console.error('Rating error:', error);
+        showMessage('حدث خطأ أثناء إرسال التقييم.', 'error');
+    }
+}
+
+// ============================================
+// الأحداث (Event Listeners)
+// ============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // تحميل البيانات الأولية
+    loadStatistics();
+    loadStandards();
+    loadRatingSummary();
+    updateAdminStatus();
+
+    // إظهار مودال تسجيل الدخول
+    adminLoginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'block';
+    });
+
+    // إظهار مودال رفع الملفات
+    uploadFileBtn.addEventListener('click', () => {
+        if (adminToken) {
+            uploadModal.style.display = 'block';
+        } else {
+            showMessage('يجب تسجيل الدخول كأدمن أولاً.', 'error');
+        }
+    });
+
+    // إغلاق المودال
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.target.closest('.modal').style.display = 'none';
+        });
+    });
+
+    // إغلاق المودال عند الضغط خارج المحتوى
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+        if (e.target === uploadModal) {
+            uploadModal.style.display = 'none';
+        }
+    });
+
+    // ربط نماذج الإرسال
+    loginForm.addEventListener('submit', loginAdmin);
+    uploadForm.addEventListener('submit', uploadFile);
+    searchForm.addEventListener('submit', searchFiles);
+    ratingForm.addEventListener('submit', submitRating);
+});
