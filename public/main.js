@@ -178,49 +178,7 @@ async function uploadFile(e) {
 // ============================================
 
 /**
- * عرض الإحصائيات
- */
-async function loadStatistics() {
-    const data = await fetchData('/statistics');
-    if (!data) return;
-
-    statsGrid.innerHTML = '';
-    data.forEach(stat => {
-        let iconClass = '';
-        let iconColor = '';
-        switch (stat.code) {
-            case 'ASTM':
-                iconClass = 'fas fa-vial'; // أنبوبة اختبار (للتربة/المواد)
-                iconColor = 'var(--primary)';
-                break;
-            case 'ACI':
-                iconClass = 'fas fa-cube'; // مكعب (للخرسانة)
-                iconColor = 'var(--secondary)';
-                break;
-            case 'BS':
-                iconClass = 'fas fa-flag-usa'; // علم (بديل للعلم البريطاني)
-                iconColor = '#eab308';
-                break;
-            case 'OTHER':
-                iconClass = 'fas fa-folder-open'; // مجلد مفتوح
-                iconColor = 'var(--text-dark)';
-                break;
-        }
-
-        const card = document.createElement('div');
-        card.className = 'stat-card';
-        card.setAttribute('data-code', stat.code);
-        card.innerHTML = `
-            <i class="${iconClass}" style="font-size: 2rem; color: ${iconColor}; margin-bottom: 10px;"></i>
-            <h3>${stat.name}</h3>
-            <p class="icon-file">${stat.fileCount} ملف</p>
-            <p class="icon-download">${stat.totalDownloads} تحميل</p>
-        `;
-        statsGrid.appendChild(card);
-    });
-}
-/**
- * عرض الإحصائيات
+ * عرض الإحصائيات (تم التحديث لإضافة أيقونات واضحة)
  */
 async function loadStatistics() {
     const data = await fetchData('/statistics');
@@ -262,9 +220,8 @@ async function loadStatistics() {
     });
 }
 
-
 /**
- * عرض قائمة المعايير
+ * عرض قائمة المعايير (تم التحديث لإضافة أيقونات)
  */
 async function loadStandards() {
     const data = await fetchData('/standards');
@@ -272,11 +229,27 @@ async function loadStandards() {
 
     standardsGrid.innerHTML = '';
     data.forEach(standard => {
+        let iconClass = 'fas fa-file-alt'; // أيقونة افتراضية
+        switch (standard.code) {
+            case 'ASTM':
+                iconClass = 'fas fa-vial';
+                break;
+            case 'ACI':
+                iconClass = 'fas fa-cube';
+                break;
+            case 'BS':
+                iconClass = 'fas fa-flag-usa';
+                break;
+            case 'OTHER':
+                iconClass = 'fas fa-folder-open';
+                break;
+        }
+
         const item = document.createElement('div');
         item.className = 'standard-item';
         item.setAttribute('data-id', standard.id);
         item.innerHTML = `
-            <h4><span class="fa-icon icon-code"></span> ${standard.name} (${standard.code})</h4>
+            <h4><i class="${iconClass}"></i> ${standard.name} (${standard.code})</h4>
             <p>${standard.description}</p>
         `;
         item.addEventListener('click', () => loadStandardFiles(standard.id, standard.name));
@@ -459,4 +432,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // (يمكن تعديل هذا لتحميل أول معيار أو تركه فارغاً)
     // loadStandardFiles(1, 'ASTM');
 });
-
