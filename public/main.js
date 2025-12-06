@@ -186,10 +186,32 @@ async function loadStatistics() {
 
     statsGrid.innerHTML = '';
     data.forEach(stat => {
+        let iconClass = '';
+        let iconColor = '';
+        switch (stat.code) {
+            case 'ASTM':
+                iconClass = 'fas fa-vial'; // أنبوبة اختبار (للتربة/المواد)
+                iconColor = 'var(--primary)';
+                break;
+            case 'ACI':
+                iconClass = 'fas fa-cube'; // مكعب (للخرسانة)
+                iconColor = 'var(--secondary)';
+                break;
+            case 'BS':
+                iconClass = 'fas fa-flag-usa'; // علم (بديل للعلم البريطاني)
+                iconColor = '#eab308';
+                break;
+            case 'OTHER':
+                iconClass = 'fas fa-folder-open'; // مجلد مفتوح
+                iconColor = 'var(--text-dark)';
+                break;
+        }
+
         const card = document.createElement('div');
         card.className = 'stat-card';
         card.setAttribute('data-code', stat.code);
         card.innerHTML = `
+            <i class="${iconClass}" style="font-size: 2rem; color: ${iconColor}; margin-bottom: 10px;"></i>
             <h3>${stat.name}</h3>
             <p class="icon-file">${stat.fileCount} ملف</p>
             <p class="icon-download">${stat.totalDownloads} تحميل</p>
@@ -197,6 +219,49 @@ async function loadStatistics() {
         statsGrid.appendChild(card);
     });
 }
+/**
+ * عرض الإحصائيات
+ */
+async function loadStatistics() {
+    const data = await fetchData('/statistics');
+    if (!data) return;
+
+    statsGrid.innerHTML = '';
+    data.forEach(stat => {
+        let iconClass = '';
+        let iconColor = '';
+        switch (stat.code) {
+            case 'ASTM':
+                iconClass = 'fas fa-vial'; // أنبوبة اختبار (للتربة/المواد)
+                iconColor = 'var(--primary)';
+                break;
+            case 'ACI':
+                iconClass = 'fas fa-cube'; // مكعب (للخرسانة)
+                iconColor = 'var(--secondary)';
+                break;
+            case 'BS':
+                iconClass = 'fas fa-flag-usa'; // علم (بديل للعلم البريطاني)
+                iconColor = '#eab308';
+                break;
+            case 'OTHER':
+                iconClass = 'fas fa-folder-open'; // مجلد مفتوح
+                iconColor = 'var(--text-dark)';
+                break;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'stat-card';
+        card.setAttribute('data-code', stat.code);
+        card.innerHTML = `
+            <i class="${iconClass}" style="font-size: 2rem; color: ${iconColor}; margin-bottom: 10px;"></i>
+            <h3>${stat.name}</h3>
+            <p class="icon-file">${stat.fileCount} ملف</p>
+            <p class="icon-download">${stat.totalDownloads} تحميل</p>
+        `;
+        statsGrid.appendChild(card);
+    });
+}
+
 
 /**
  * عرض قائمة المعايير
