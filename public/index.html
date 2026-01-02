@@ -690,6 +690,31 @@
         </div>
     </div>
 
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>✏️ تعديل بيانات ملف</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-file-id" name="id">
+                <div class="form-group">
+                    <label for="edit-file-title">اسم الملف:</label>
+                    <input type="text" id="edit-file-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-file-description">الوصف:</label>
+                    <input type="text" id="edit-file-description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-file-standard">المعيار:</label>
+                    <select id="edit-file-standard" name="standardId" required>
+                        <option value="">اختر معيار...</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">حفظ التعديلات</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         const API_BASE = '/api';
         let adminToken = localStorage.getItem('adminToken') || null;
@@ -704,9 +729,11 @@
 
         const loginModal = document.getElementById('login-modal');
         const uploadModal = document.getElementById('upload-modal');
+        const editModal = document.getElementById('edit-modal');
         const closeButtons = document.querySelectorAll('.close-button');
         const loginForm = document.getElementById('login-form');
         const uploadForm = document.getElementById('upload-form');
+        const editForm = document.getElementById('edit-form');
         const statsGrid = document.getElementById('stats-grid');
         const standardsGrid = document.getElementById('standards-grid');
         const filesList = document.getElementById('files-list');
@@ -924,12 +951,78 @@
             }
         }
 
-        function editFile(fileId) {
+        async function editFile(fileId) {
             if (!adminToken) {
                 showMessage('يجب تسجيل الدخول.', 'error');
                 return;
             }
-            showMessage('قريباً: التعديل سيكون متاحاً قريباً.', 'info');
+
+            try {
+                const response = await fetchData(`/files/${fileId}/details`);
+                if (!response) return;
+
+                document.getElementById('edit-file-id').value = response.id;
+                document.getElementById('edit-file-title').value = response.title;
+                document.getElementById('edit-file-description').value = response.description;
+
+                // Populate standards
+                const standards = await fetchData('/standards');
+                const select = document.getElementById('edit-file-standard');
+                select.innerHTML = '<option value="">اختر معيار...</option>';
+                standards.forEach(std => {
+                    const option = document.createElement('option');
+                    option.value = std.id;
+                    option.textContent = `${std.name} (${std.code})`;
+                    if (std.id == response.standard_id) option.selected = true;
+                    select.appendChild(option);
+                });
+
+                editModal.style.display = 'block';
+            } catch (e) {
+                console.error(e);
+                showMessage('خطأ في جلب بيانات الملف', 'error');
+            }
+        }
+
+        async function submitEdit(e) {
+            e.preventDefault();
+            const fileId = document.getElementById('edit-file-id').value;
+            const formData = new FormData(editForm);
+            const data = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                standardId: formData.get('standardId')
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/files/${fileId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Token': adminToken
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    editModal.style.display = 'none';
+                    showMessage('تم تعديل الملف بنجاح', 'success');
+                    // Refresh current view
+                    // ideally we should know which view we are in.
+                    // For now reload both potentially
+                    loadStandards();
+                    // If we were viewing a standard list, we might want to refresh it.
+                    // But we don't track the current open standard easily here.
+                    // User can navigate.
+                } else {
+                    showMessage(result.error || 'فشل التعديل', 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showMessage('خطأ في التعديل', 'error');
+            }
         }
 
         async function searchFiles(e) {
@@ -1028,6 +1121,7 @@
 
             loginForm.addEventListener('submit', loginAdmin);
             uploadForm.addEventListener('submit', uploadFile);
+            editForm.addEventListener('submit', submitEdit);
             searchForm.addEventListener('submit', searchFiles);
             ratingForm.addEventListener('submit', submitRating);
         });
