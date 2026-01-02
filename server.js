@@ -211,6 +211,25 @@ app.post('/api/files/upload', requireAdmin, upload.single('file'), async (req, r
 });
 
 // 3. تحميل ملف (زيادة عدد التحميلات وإرسال الملف)
+// 3a. جلب تفاصيل ملف (للتعديل)
+app.get('/api/files/:id/details', async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        const result = await pool.query(
+            `SELECT id, standard_id, title, description, filename, original_name FROM files WHERE id = $1`,
+            [fileId]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'الملف غير موجود' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('خطأ في جلب تفاصيل الملف:', err);
+        res.status(500).json({ error: 'خطأ في جلب تفاصيل الملف' });
+    }
+});
+
+// 3b. تحميل ملف
 app.get('/api/files/:id/download', async (req, res) => {
   try {
     const fileId = req.params.id;
@@ -412,6 +431,10 @@ app.post('/api/ratings', async (req, res) => {
 // ============================================
 // تشغيل الخادم
 // ============================================
-app.listen(port, () => {
-  console.log(`Your service is live 🎉 on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Your service is live 🎉 on port ${port}`);
+  });
+}
+
+module.exports = app;
